@@ -25,16 +25,23 @@ public class Etal {
 		etalOccupe = true;
 	}
 
-	public String libererEtal() {
-		etalOccupe = false;
-		StringBuilder chaine = new StringBuilder(
-				"Le vendeur " + vendeur.getNom() + " quitte son étal, ");
-		int produitVendu = quantiteDebutMarche - quantite;
-		if (produitVendu > 0) {
-			chaine.append(
-					"il a vendu " + produitVendu + " parmi " + produit + ".\n");
-		} else {
-			chaine.append("il n'a malheureusement rien vendu.\n");
+	public String libererEtal()throws IllegalStateException {
+		StringBuilder chaine = new StringBuilder();
+		try {
+			if (!etalOccupe){
+				chaine.append("Le vendeur " + vendeur.getNom() + " quitte son étal, ");
+				int produitVendu = quantiteDebutMarche - quantite;
+				if (produitVendu > 0) {
+					chaine.append(
+							"il a vendu " + produitVendu + " parmi " + produit + ".\n");
+				} else {
+					chaine.append("il n'a malheureusement rien vendu.\n");
+				}
+			}
+		}
+		catch (IllegalStateException e ) {
+			chaine.append("Etal déjà libre");
+			
 		}
 		return chaine.toString();
 	}
@@ -47,8 +54,16 @@ public class Etal {
 		return "L'étal est libre";
 	}
 
-	public String acheterProduit(int quantiteAcheter, Gaulois acheteur) {
-		if (etalOccupe) {
+	public String acheterProduit(int quantiteAcheter, Gaulois acheteur) 
+			throws IllegalStateException, IllegalArgumentException {
+		if (quantiteAcheter < 1) {
+			throw new IllegalArgumentException("La quantite a acheter doit etre positif!");
+		}
+
+		if (!isEtalOccupe()) {
+			throw new IllegalStateException("L'étal est innocupe");
+		}
+		try {
 			StringBuilder chaine = new StringBuilder();
 			chaine.append(acheteur.getNom() + " veut acheter " + quantiteAcheter
 					+ " " + produit + " à " + vendeur.getNom());
@@ -71,8 +86,11 @@ public class Etal {
 			}
 			return chaine.toString();
 		}
-		return null;
+		catch (NullPointerException e) {
+			System.out.println("Acheteur null");
 	}
+		return null;
+}
 
 	public boolean contientProduit(String produit) {
 		return this.produit.equals(produit);

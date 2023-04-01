@@ -1,6 +1,6 @@
 package exception;
 
-public class VillageSansChefException extends Exception{
+public class VillageSansChefException extends IllegalStateException {
 	private static final long serialVersionUID = 1L;
     private static final String message = "[Error] : Le village n'a pas de chef";
 
